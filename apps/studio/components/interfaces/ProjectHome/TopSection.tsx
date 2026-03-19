@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { ReactFlowProvider } from 'reactflow'
 import { Badge, cn, Tooltip, TooltipContent, TooltipTrigger } from 'ui'
 
+import { WaveAnimation } from 'components/ui/WaveAnimation'
 import { InstanceConfiguration } from '../Settings/Infrastructure/InfrastructureConfiguration/InstanceConfiguration'
 
 export const TopSection = () => {
@@ -30,6 +31,7 @@ export const TopSection = () => {
   const isMainBranch = currentBranch?.name === mainBranch?.name
 
   const isPaused = project?.status === PROJECT_STATUS.INACTIVE
+  const isWelcome = !currentBranch || isMainBranch ? !project?.name : false
   const projectName =
     currentBranch && !isMainBranch
       ? currentBranch.name
@@ -56,7 +58,10 @@ export const TopSection = () => {
                 </Link>
               )}
               <div className="flex items-center gap-x-2">
-                <h1 className="text-3xl">{projectName}</h1>
+                <h1 className="text-3xl flex items-center gap-3">
+                  {projectName}
+                  {isWelcome && <WaveAnimation size={32} />}
+                </h1>
                 <div className="flex items-center gap-x-2">
                   {isOrioleDb && (
                     <Tooltip>

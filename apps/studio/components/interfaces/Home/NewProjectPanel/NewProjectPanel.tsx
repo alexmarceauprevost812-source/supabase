@@ -7,6 +7,7 @@ import { Button } from 'ui'
 import { APIKeys } from './APIKeys'
 import { GetStartedHero } from './GetStartedHero'
 import { DocsButton } from '@/components/ui/DocsButton'
+import { WaveAnimation } from '@/components/ui/WaveAnimation'
 import { InlineLink } from '@/components/ui/InlineLink'
 import Panel from '@/components/ui/Panel'
 import { EditorIndexPageLink } from '@/data/prefetchers/project.$ref.editor'
@@ -28,7 +29,9 @@ export const NewProjectPanel = () => {
         <div className="flex flex-col space-y-12 md:space-y-20">
           <div className="flex h-full flex-col justify-between">
             <div className="space-y-2">
-              <h2>Welcome to your new project</h2>
+              <h2 className="flex items-center gap-3">
+                Welcome to your new project <WaveAnimation size={32} />
+              </h2>
               <p className="text-base text-foreground-light">
                 Your project has been deployed on its own instance, with its own API all set up and
                 ready to use.
