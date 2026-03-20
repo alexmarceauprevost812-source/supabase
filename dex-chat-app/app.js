@@ -125,6 +125,11 @@ async function loadMessages() {
 let activeWindow = null;
 let dragState = null;
 
+// Ouverture rapide du chat
+function openApp() {
+  document.getElementById("chatWindow").style.display = "flex";
+}
+
 function openWindow(id) {
   const win = document.getElementById(id);
   // Fermer les autres fenêtres actives au même niveau
@@ -132,6 +137,7 @@ function openWindow(id) {
     activeWindow.style.zIndex = 10;
   }
   win.classList.add("active");
+  win.style.display = "flex";
   win.style.zIndex = 20;
   activeWindow = win;
 }
