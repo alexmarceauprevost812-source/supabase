@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeX Chat - Supabase</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Bureau DeX -->
+  <div class="desktop">
+    <div class="desktop-icons">
+      <div class="desktop-icon" onclick="openWindow('chatWindow')">
+        <div class="icon-img">💬</div>
+        <span>Chat IA</span>
+      </div>
+      <div class="desktop-icon" onclick="openWindow('settingsWindow')">
+        <div class="icon-img">⚙️</div>
+        <span>Paramètres</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fenêtre Chat -->
+  <div class="window" id="chatWindow">
+    <div class="window-header" onmousedown="startDrag(event, 'chatWindow')">
+      <span class="window-title">💬 Chat IA</span>
+      <div class="window-controls">
+        <button class="win-btn minimize" onclick="minimizeWindow('chatWindow')">−</button>
+        <button class="win-btn maximize" onclick="maximizeWindow('chatWindow')">□</button>
+        <button class="win-btn close" onclick="closeWindow('chatWindow')">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-area">
+        <input type="text" id="userInput" placeholder="Écrivez un message..." onkeydown="if(event.key==='Enter') sendMessage()">
+        <button onclick="sendMessage()">Envoyer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fenêtre Paramètres -->
+  <div class="window" id="settingsWindow" style="left:200px; top:100px; width:350px; height:300px;">
+    <div class="window-header" onmousedown="startDrag(event, 'settingsWindow')">
+      <span class="window-title">⚙️ Paramètres Supabase</span>
+      <div class="window-controls">
+        <button class="win-btn close" onclick="closeWindow('settingsWindow')">✕</button>
+      </div>
+    </div>
+    <div class="window-body settings-body">
+      <label>URL Supabase</label>
+      <input type="text" id="supabaseUrl" placeholder="https://xxxxx.supabase.co">
+      <label>Clé Anon</label>
+      <input type="text" id="supabaseKey" placeholder="eyJhbGciOi...">
+      <button onclick="saveConfig()">Connecter</button>
+      <p id="connectionStatus"></p>
+    </div>
+  </div>
+
+  <!-- Bulle de chat flottante (bas droite) -->
+  <div class="chat-bubble" id="chatBubble" onclick="toggleChatFromBubble()">
+    💬
+  </div>
+
+  <!-- Barre des tâches DeX -->
+  <div class="taskbar">
+    <div class="taskbar-left">
+      <div class="app-icon" onclick="toggleChatFromBubble()" title="Chat IA">💬</div>
+      <div class="app-icon" onclick="openWindow('settingsWindow')" title="Paramètres">⚙️</div>
+    </div>
+    <div class="taskbar-center" id="taskbarApps"></div>
+    <div class="taskbar-right">
+      <span id="clock"></span>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
