@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>AlexGPT OS</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI';
+  background: linear-gradient(145deg,#0a0a0a,#1a1a1a);
+  color: white;
+}
+
+/* ===== TASKBAR ===== */
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background: rgba(20,20,20,0.9);
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  gap: 10px;
+}
+
+/* Bouton app */
+.app {
+  background: #ff6600;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* ===== WINDOW ===== */
+.window {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  width: 350px;
+  height: 400px;
+  background: #121212;
+  border-radius: 12px;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 0 20px rgba(255,102,0,0.4);
+}
+
+/* Header */
+.header {
+  background: #ff6600;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Content */
+.content {
+  padding: 10px;
+  flex: 1;
+  overflow: auto;
+}
+
+/* Close */
+.close {
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== WINDOWS ===== -->
+
+<div id="projet" class="window">
+  <div class="header">Projet <span class="close" onclick="closeWin('projet')">✖</span></div>
+  <div class="content">Gestion des projets 🔥</div>
+</div>
+
+<div id="dossier" class="window">
+  <div class="header">Dossier <span class="close" onclick="closeWin('dossier')">✖</span></div>
+  <div class="content">Fichiers / dossiers 📁</div>
+</div>
+
+<div id="alarme" class="window">
+  <div class="header">Alarmes <span class="close" onclick="closeWin('alarme')">✖</span></div>
+  <div class="content">
+    <input type="time" id="alarmTime">
+    <button onclick="setAlarm()">Activer</button>
+  </div>
+</div>
+
+<div id="agenda" class="window">
+  <div class="header">Agenda <span class="close" onclick="closeWin('agenda')">✖</span></div>
+  <div class="content">Agenda 📅 (à connecter Supabase)</div>
+</div>
+
+<div id="calc" class="window">
+  <div class="header">Calculatrice <span class="close" onclick="closeWin('calc')">✖</span></div>
+  <div class="content">
+    <input id="calcInput">
+    <button onclick="calculate()">=</button>
+    <div id="result"></div>
+  </div>
+</div>
+
+<div id="agent" class="window">
+  <div class="header">Agent IA <span class="close" onclick="closeWin('agent')">✖</span></div>
+  <div class="content">Agent connecté 🤖</div>
+</div>
+
+<div id="createAgent" class="window">
+  <div class="header">Créer Agent <span class="close" onclick="closeWin('createAgent')">✖</span></div>
+  <div class="content">
+    <input placeholder="Nom agent">
+    <button>Créer</button>
+  </div>
+</div>
+
+<!-- ===== TASKBAR ===== -->
+
+<div class="taskbar">
+  <div class="app" onclick="openWin('projet')">Projet</div>
+  <div class="app" onclick="openWin('dossier')">Dossier</div>
+  <div class="app" onclick="openWin('alarme')">Alarmes</div>
+  <div class="app" onclick="openWin('agenda')">Agenda</div>
+  <div class="app" onclick="openWin('calc')">Calculatrice</div>
+  <div class="app" onclick="openWin('createAgent')">Créer Agent</div>
+  <div class="app" onclick="openWin('agent')">Agent</div>
+</div>
+
+<script>
+
+/* OPEN / CLOSE */
+function openWin(id){
+  document.getElementById(id).style.display = "flex";
+}
+
+function closeWin(id){
+  document.getElementById(id).style.display = "none";
+}
+
+/* CALCULATRICE */
+function calculate(){
+  let val = document.getElementById("calcInput").value;
+  document.getElementById("result").innerText = eval(val);
+}
+
+/* ALARME */
+function setAlarm(){
+  let time = document.getElementById("alarmTime").value;
+
+  setInterval(()=>{
+    let now = new Date();
+    let current = now.toTimeString().slice(0,5);
+
+    if(current === time){
+      alert("⏰ Alarme !");
+    }
+  },1000);
+}
+
+</script>
+
+</body>
+</html>
