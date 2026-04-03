@@ -1,6 +1,5 @@
 {
-  "framework": "nextjs",
-  "installCommand": "pnpm install --filter ti-lex-agenda...",
-  "buildCommand": "cd apps/ti-lex-agenda && pnpm build",
+  "installCommand": "pnpm install --ignore-scripts",
+  "buildCommand": "cd apps/ti-lex-agenda && npx next build",
   "outputDirectory": "apps/ti-lex-agenda/.next"
 }
