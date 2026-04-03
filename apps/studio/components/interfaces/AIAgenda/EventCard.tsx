@@ -1,4 +1,4 @@
-import { Clock, Sparkles, Trash2 } from 'lucide-react'
+import { Clock, Globe, Lock, Sparkles, Trash2, Users } from 'lucide-react'
 import { AgendaEvent, EventCategory } from './types'
 
 const CATEGORY_STYLES: Record<EventCategory, { accent: string; bg: string; icon: string }> = {
@@ -39,11 +39,32 @@ export function EventCard({ event, onDelete }: EventCardProps) {
               </span>
             )}
           </div>
-          <div className="flex items-center gap-1.5 mt-1 text-white/40">
-            <Clock size={11} />
-            <span className="text-[11px]">
-              {event.startTime} — {event.endTime}
+          <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center gap-1 text-white/40">
+              <Clock size={11} />
+              <span className="text-[11px]">
+                {event.startTime} — {event.endTime}
+              </span>
+            </div>
+            {/* Visibility badge */}
+            <span className={`inline-flex items-center gap-0.5 text-[8px] font-bold px-1.5 py-0.5 rounded-full ${
+              event.visibility === 'private'
+                ? 'text-emerald-400 bg-emerald-400/10'
+                : event.visibility === 'friends'
+                  ? 'text-cyan-400 bg-cyan-400/10'
+                  : 'text-amber-400 bg-amber-400/10'
+            }`}>
+              {event.visibility === 'private' && <Lock size={7} />}
+              {event.visibility === 'friends' && <Users size={7} />}
+              {event.visibility === 'public' && <Globe size={7} />}
+              {event.visibility === 'private' ? 'Privé' : event.visibility === 'friends' ? 'Amis' : 'Public'}
             </span>
+            {/* Invited count */}
+            {event.invitedFriends.length > 0 && (
+              <span className="text-[8px] text-white/25">
+                +{event.invitedFriends.length} invité{event.invitedFriends.length > 1 ? 's' : ''}
+              </span>
+            )}
           </div>
         </div>
 

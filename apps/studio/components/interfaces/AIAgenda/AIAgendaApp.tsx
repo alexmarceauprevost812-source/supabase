@@ -1,4 +1,4 @@
-import { Plus, Bot, Bell, ChevronLeft, Smile, Power } from 'lucide-react'
+import { Plus, Bot, Bell, ChevronLeft, Smile, Power, Shield } from 'lucide-react'
 import { useState, useCallback } from 'react'
 import { AddEventModal } from './AddEventModal'
 import { AIChat } from './AIChat'
@@ -7,8 +7,10 @@ import { DayTimeline } from './DayTimeline'
 import { EmojiAnimations } from './emojis/EmojiAnimations'
 import { EmojiPanel } from './emojis/EmojiPanel'
 import { EventNotification } from './EventNotification'
+import { FriendsPanel } from './FriendsPanel'
 import { LockScreen } from './LockScreen'
 import { MascotPopup } from './MascotPopup'
+import { PrivacySettingsPanel } from './PrivacySettings'
 import { TVShutdown } from './TVShutdown'
 import { useAgendaStore } from './useAgendaStore'
 
@@ -19,6 +21,8 @@ export function AIAgendaApp() {
     events,
     selectedDate,
     setSelectedDate,
+    privacySettings,
+    setPrivacySettings,
     addEvent,
     removeEvent,
     messages,
@@ -27,6 +31,8 @@ export function AIAgendaApp() {
 
   const [isLocked, setIsLocked] = useState(true)
   const [showAddModal, setShowAddModal] = useState(false)
+  const [showPrivacy, setShowPrivacy] = useState(false)
+  const [showContacts, setShowContacts] = useState(false)
   const [showAI, setShowAI] = useState(false)
   const [showEmojis, setShowEmojis] = useState(false)
   const [view, setView] = useState<AppView>('month')
@@ -124,6 +130,15 @@ export function AIAgendaApp() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Privacy Settings */}
+            <button
+              onClick={() => setShowPrivacy(true)}
+              className="w-9 h-9 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400/60 hover:bg-emerald-500/20 hover:text-emerald-400 transition-all"
+              title="Paramètres de confidentialité"
+            >
+              <Shield size={15} />
+            </button>
+
             {/* Power Off / Back button */}
             <button
               onClick={handleBack}
@@ -277,6 +292,7 @@ export function AIAgendaApp() {
           onAdd={addEvent}
           onClose={() => { setShowAddModal(false); setShowMascot(false) }}
           prefillTime={prefillTime}
+          defaultVisibility={privacySettings.defaultVisibility}
         />
       )}
 
@@ -290,6 +306,25 @@ export function AIAgendaApp() {
         <EmojiPanel
           onClose={() => setShowEmojis(false)}
           onSelectEmoji={handleSelectEmoji}
+        />
+      )}
+
+      {/* Privacy Settings Panel */}
+      {showPrivacy && (
+        <PrivacySettingsPanel
+          settings={privacySettings}
+          onUpdate={setPrivacySettings}
+          onClose={() => setShowPrivacy(false)}
+        />
+      )}
+
+      {/* Contacts / Friends Panel */}
+      {showContacts && (
+        <FriendsPanel
+          onClose={() => setShowContacts(false)}
+          selectedFriends={[]}
+          onToggleFriend={() => {}}
+          mode="browse"
         />
       )}
 
