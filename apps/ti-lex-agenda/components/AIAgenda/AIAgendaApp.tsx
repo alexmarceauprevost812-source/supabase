@@ -151,7 +151,7 @@ export function AIAgendaApp() {
   }
 
   return (
-    <div className="app-container h-full bg-[#0a0a0f] text-white relative overflow-hidden">
+    <div className="app-container h-full bg-black text-white relative overflow-hidden">
       {/* Global emoji animations */}
       <EmojiAnimations />
 
@@ -301,10 +301,10 @@ export function AIAgendaApp() {
           )}
         </div>
 
-        {/* FAB — big + button */}
+        {/* FAB — big + button orange */}
         <button
           onClick={handleOpenAddModal}
-          className="fixed bottom-8 right-5 w-20 h-20 rounded-full bg-cyan-500 hover:bg-cyan-400 text-black flex items-center justify-center shadow-[0_6px_30px_rgba(34,211,238,0.5)] hover:shadow-[0_6px_40px_rgba(34,211,238,0.6)] transition-all hover:scale-110 active:scale-95 z-20"
+          className="fixed bottom-8 right-5 w-20 h-20 rounded-full bg-orange-500 hover:bg-orange-400 text-white flex items-center justify-center shadow-[0_6px_30px_rgba(249,115,22,0.5)] hover:shadow-[0_6px_40px_rgba(249,115,22,0.6)] transition-all hover:scale-110 active:scale-95 z-20"
         >
           <Plus size={36} strokeWidth={3} />
         </button>
