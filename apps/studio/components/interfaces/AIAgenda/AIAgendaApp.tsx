@@ -1,5 +1,6 @@
-import { Plus, Bot, Bell, ChevronLeft, Smile, Power, Shield, Wand2 } from 'lucide-react'
+import { Plus, Bot, Bell, ChevronLeft, Smile, Power, Shield, Wand2, Info } from 'lucide-react'
 import { useState, useCallback } from 'react'
+import { AboutCreator } from './AboutCreator'
 import { AddEventModal } from './AddEventModal'
 import { AIChat } from './AIChat'
 import { CalendarSidebar } from './CalendarSidebar'
@@ -48,6 +49,7 @@ export function AIAgendaApp() {
   const [wordEffects, setWordEffects] = useState<WordEffect[]>(DEFAULT_WORD_EFFECTS)
   const [showWordEffectSettings, setShowWordEffectSettings] = useState(false)
   const [activeScreenEffect, setActiveScreenEffect] = useState<EffectType | null>(null)
+  const [showAbout, setShowAbout] = useState(false)
 
   const { checkText } = useWordEffects(wordEffects)
 
@@ -154,6 +156,15 @@ export function AIAgendaApp() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* About / Copyright */}
+            <button
+              onClick={() => setShowAbout(true)}
+              className="w-9 h-9 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400/60 hover:bg-amber-500/20 hover:text-amber-400 transition-all"
+              title="À propos · Droits d'auteur"
+            >
+              <Info size={15} />
+            </button>
+
             {/* Privacy Settings */}
             <button
               onClick={() => setShowPrivacy(true)}
@@ -341,6 +352,9 @@ export function AIAgendaApp() {
           onSelectEmoji={handleSelectEmoji}
         />
       )}
+
+      {/* About / Copyright */}
+      {showAbout && <AboutCreator onClose={() => setShowAbout(false)} />}
 
       {/* Word Effects Settings */}
       {showWordEffectSettings && (
