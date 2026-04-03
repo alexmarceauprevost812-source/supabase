@@ -1,5 +1,5 @@
 {
   "installCommand": "pnpm install --ignore-scripts",
   "buildCommand": "cd apps/ti-lex-agenda && npx next build",
-  "outputDirectory": "apps/ti-lex-agenda/.next"
+  "outputDirectory": "apps/ti-lex-agenda/out"
 }
