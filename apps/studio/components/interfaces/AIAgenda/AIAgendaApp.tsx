@@ -4,6 +4,7 @@ import { AddEventModal } from './AddEventModal'
 import { AIChat } from './AIChat'
 import { CalendarSidebar } from './CalendarSidebar'
 import { DayView } from './DayView'
+import { LockScreen } from './LockScreen'
 import { useAgendaStore } from './useAgendaStore'
 
 export function AIAgendaApp() {
@@ -19,7 +20,12 @@ export function AIAgendaApp() {
     sendMessage,
   } = useAgendaStore()
 
+  const [isLocked, setIsLocked] = useState(true)
   const [showAddModal, setShowAddModal] = useState(false)
+
+  if (isLocked) {
+    return <LockScreen onUnlock={() => setIsLocked(false)} />
+  }
 
   return (
     <div className="flex h-full bg-background">
