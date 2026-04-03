@@ -1,0 +1,25 @@
+{
+  "name": "ti-lex-agenda",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "lucide-react": "^0.460.0"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:",
+    "tailwindcss": "catalog:",
+    "postcss": "^8.4.31",
+    "autoprefixer": "^10.4.16"
+  }
+}
