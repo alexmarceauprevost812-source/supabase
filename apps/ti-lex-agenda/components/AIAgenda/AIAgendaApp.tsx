@@ -1,4 +1,4 @@
-import { Plus, Bot, Bell, ChevronLeft, Smile, Power, Shield, Wand2, Info } from 'lucide-react'
+import { Plus, Bot, Bell, ChevronLeft, Smile, Power, Shield, Wand2, Info, Lock } from 'lucide-react'
 import { useState, useCallback } from 'react'
 import { AboutCreator } from './AboutCreator'
 import { AuthScreen } from './AuthScreen'
@@ -17,6 +17,7 @@ import { FriendsPanel } from './FriendsPanel'
 import { LockScreen } from './LockScreen'
 import { MascotPopup } from './MascotPopup'
 import { PrivacySettingsPanel } from './PrivacySettings'
+import { SecuritySettings, SecurityConfig, DEFAULT_SECURITY } from './SecuritySettings'
 import { TVShutdown } from './TVShutdown'
 import { TVStartup } from './TVStartup'
 import { useAgendaStore } from './useAgendaStore'
@@ -38,7 +39,9 @@ export function AIAgendaApp() {
 
   const [showStartup, setShowStartup] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [isLocked, setIsLocked] = useState(true)
+  const [securityConfig, setSecurityConfig] = useState<SecurityConfig>(DEFAULT_SECURITY)
+  const [isLocked, setIsLocked] = useState(false) // disabled by default
+  const [showSecurity, setShowSecurity] = useState(false)
   const [showAddModal, setShowAddModal] = useState(false)
   const [showPrivacy, setShowPrivacy] = useState(false)
   const [showContacts, setShowContacts] = useState(false)
@@ -90,10 +93,10 @@ export function AIAgendaApp() {
   const handleTVShutdownComplete = useCallback(() => {
     setShowTVOff(false)
     setView('month')
-    setIsLocked(true)
+    if (securityConfig.lockEnabled) setIsLocked(true)
     setShowAI(false)
     setShowEmojis(false)
-  }, [])
+  }, [securityConfig.lockEnabled])
 
   // Back to month view (from day view, no TV effect)
   const handleBackToMonth = useCallback(() => {
@@ -135,9 +138,16 @@ export function AIAgendaApp() {
     return <AuthScreen onAuth={() => setIsAuthenticated(true)} />
   }
 
-  // Phase 3: Lock screen (PIN code)
-  if (isLocked) {
-    return <LockScreen onUnlock={() => setIsLocked(false)} />
+  // Phase 3: Lock screen (only if enabled in security settings)
+  if (isLocked && securityConfig.lockEnabled) {
+    return (
+      <LockScreen
+        onUnlock={() => setIsLocked(false)}
+        method={securityConfig.lockMethod}
+        password={securityConfig.password}
+        pin={securityConfig.pin}
+      />
+    )
   }
 
   return (
@@ -171,6 +181,19 @@ export function AIAgendaApp() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Security Settings */}
+            <button
+              onClick={() => setShowSecurity(true)}
+              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+                securityConfig.lockEnabled
+                  ? 'bg-cyan-500/15 text-cyan-400'
+                  : 'bg-white/[0.06] text-white/30 hover:bg-white/10'
+              }`}
+              title="Sécurité de l'agenda"
+            >
+              <Lock size={14} />
+            </button>
+
             {/* About / Copyright */}
             <button
               onClick={() => setShowAbout(true)}
@@ -370,6 +393,15 @@ export function AIAgendaApp() {
 
       {/* About / Copyright */}
       {showAbout && <AboutCreator onClose={() => setShowAbout(false)} />}
+
+      {/* Security Settings */}
+      {showSecurity && (
+        <SecuritySettings
+          config={securityConfig}
+          onUpdate={(cfg) => { setSecurityConfig(cfg); if (cfg.lockEnabled) setIsLocked(false) }}
+          onClose={() => setShowSecurity(false)}
+        />
+      )}
 
       {/* Word Effects Settings */}
       {showWordEffectSettings && (
