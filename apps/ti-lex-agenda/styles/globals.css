@@ -2,109 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
-/* === MOBILE APP SETUP === */
-html,
-body {
+/* === MOBILE APP — 100% SCREEN === */
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  height: 100%;
-  height: 100dvh;
-  width: 100%;
+}
+
+html,
+body {
+  width: 100% !important;
+  height: 100% !important;
+  height: 100dvh !important;
   background: #0a0a0f;
   color: white;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  /* Prevent pull-to-refresh on mobile */
   overscroll-behavior: none;
-  /* Prevent text selection for app-like feel */
   -webkit-user-select: none;
   user-select: none;
-  /* Prevent tap highlight on mobile */
   -webkit-tap-highlight-color: transparent;
 }
 
 #__next {
-  height: 100%;
-  height: 100dvh;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100% !important;
+  height: 100% !important;
+  height: 100dvh !important;
 }
 
-/* === HD RENDERING === */
-* {
-  /* Force GPU acceleration for smooth animations */
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
-img, svg {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-}
-
-/* === MOBILE CENTERED CONTAINER === */
+/* === APP CONTAINER — ALWAYS 100% === */
 .app-container {
-  width: 100%;
-  max-width: 100%;
-  height: 100%;
-  height: 100dvh;
-  margin: 0;
-  padding: 0;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  height: 100dvh !important;
   position: relative;
   overflow: hidden;
 }
 
-/* On desktop, add a phone-like frame */
-@media (min-width: 768px) {
-  #__next {
-    background: #050508;
-  }
-
-  .app-container {
-    max-width: 430px;
-    max-height: 932px;
-    height: 95vh;
-    border-radius: 32px;
-    border: 2px solid rgba(255, 255, 255, 0.06);
-    box-shadow:
-      0 0 80px rgba(34, 211, 238, 0.05),
-      0 25px 50px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-  }
-}
-
-/* === SAFE AREA (iPhone notch etc.) === */
+/* === SAFE AREA (iPhone notch) === */
 @supports (padding: env(safe-area-inset-top)) {
   .app-container {
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
   }
 }
 
-/* === SMOOTH SCROLLING === */
+/* === HD RENDERING === */
+img, svg {
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* === SMOOTH & HIDE SCROLLBARS === */
 * {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-}
-
-/* Hide scrollbars for app-like feel */
-::-webkit-scrollbar {
-  display: none;
-}
-* {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+::-webkit-scrollbar {
+  display: none;
+}
 
-/* === INPUT STYLES FOR MOBILE === */
+/* === INPUTS (prevent iOS zoom) === */
 input, textarea {
   -webkit-user-select: text;
   user-select: text;
-  font-size: 16px !important; /* Prevent zoom on iOS */
+  font-size: 16px !important;
 }
