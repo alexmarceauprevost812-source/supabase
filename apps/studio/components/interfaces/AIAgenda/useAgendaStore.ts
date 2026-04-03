@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { AgendaEvent, AIMessage, ViewMode } from './types'
+import { AgendaEvent, AIMessage } from './types'
 
 const SAMPLE_EVENTS: AgendaEvent[] = [
   {
@@ -57,13 +57,13 @@ const SAMPLE_EVENTS: AgendaEvent[] = [
 
 const AI_RESPONSES: Record<string, string> = {
   optimize:
-    'I analyzed your schedule and suggest moving "Code Review" to 13:30 right after lunch, so you can maintain your deep work flow in the morning without interruption.',
+    'J\'ai analysé ton emploi du temps. Je suggère de déplacer "Code Review" à 13h30 juste après le déjeuner, pour garder ton flow de deep work le matin sans interruption.',
   suggest:
-    'Based on your workload, I recommend adding a 15-minute break at 15:00. Studies show short breaks improve afternoon productivity by 25%.',
+    'Selon ta charge de travail, je recommande d\'ajouter une pause de 15 min à 15h00. Les études montrent que les pauses courtes améliorent la productivité de 25%.',
   conflict:
-    'I noticed you have no buffer between "Sprint Planning" and "Deep Work". Consider adding a 15-minute transition period.',
+    'J\'ai remarqué qu\'il n\'y a pas de buffer entre "Sprint Planning" et "Deep Work". Ajoute une période de transition de 15 minutes.',
   default:
-    "I can help you optimize your schedule, suggest breaks, detect conflicts, or create new events. What would you like to do?",
+    'Je peux optimiser ton planning, suggérer des pauses, détecter les conflits ou créer de nouveaux événements. Que veux-tu faire ?',
 }
 
 function getAIResponse(input: string): string {
@@ -83,13 +83,12 @@ function getAIResponse(input: string): string {
 export function useAgendaStore() {
   const [events, setEvents] = useState<AgendaEvent[]>(SAMPLE_EVENTS)
   const [selectedDate, setSelectedDate] = useState(new Date())
-  const [viewMode, setViewMode] = useState<ViewMode>('day')
   const [messages, setMessages] = useState<AIMessage[]>([
     {
       id: '0',
       role: 'assistant',
       content:
-        "Hello! I'm your AI scheduling assistant. I can help you optimize your agenda, suggest breaks, detect conflicts, and manage your events. How can I help you today?",
+        "Salut ! Je suis ti-lex, ton assistant IA de planification. Je peux optimiser ton agenda, suggérer des pauses, détecter les conflits et gérer tes événements. Comment puis-je t'aider ?",
       timestamp: new Date(),
     },
   ])
@@ -124,8 +123,6 @@ export function useAgendaStore() {
     events,
     selectedDate,
     setSelectedDate,
-    viewMode,
-    setViewMode,
     addEvent,
     removeEvent,
     messages,

@@ -1,4 +1,4 @@
-import { Bot, Send, User } from 'lucide-react'
+import { Bot, Send, User, Sparkles } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import { AIMessage } from './types'
 
@@ -23,16 +23,19 @@ export function AIChat({ messages, onSendMessage }: AIChatProps) {
   }
 
   return (
-    <div className="w-80 border-l border-border-default bg-surface-100 flex flex-col">
+    <div className="w-80 border-l border-white/[0.06] bg-[#0d0d14] flex flex-col">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-border-default bg-gradient-to-r from-brand-500/10 to-purple-500/10">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center shadow-sm">
-            <Bot size={16} className="text-white" />
+      <div className="px-4 py-3 border-b border-white/[0.06]">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+            <Sparkles size={16} className="text-white" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-foreground">Assistant IA</h3>
-            <p className="text-[10px] text-foreground-muted">Planification intelligente</p>
+            <h3 className="text-sm font-bold text-white">ti-lex IA</h3>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <p className="text-[10px] text-white/30">En ligne</p>
+            </div>
           </div>
         </div>
       </div>
@@ -45,23 +48,23 @@ export function AIChat({ messages, onSendMessage }: AIChatProps) {
             className={`flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
           >
             <div
-              className={`w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center ${
+              className={`w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center ${
                 msg.role === 'assistant'
-                  ? 'bg-gradient-to-br from-brand-500 to-purple-500'
-                  : 'bg-surface-300'
+                  ? 'bg-gradient-to-br from-cyan-400 to-blue-600'
+                  : 'bg-white/10'
               }`}
             >
               {msg.role === 'assistant' ? (
-                <Bot size={12} className="text-white" />
+                <Bot size={13} className="text-white" />
               ) : (
-                <User size={12} className="text-foreground-light" />
+                <User size={13} className="text-white/60" />
               )}
             </div>
             <div
-              className={`max-w-[85%] rounded-xl px-3 py-2 text-xs leading-relaxed ${
+              className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
                 msg.role === 'assistant'
-                  ? 'bg-surface-200 text-foreground'
-                  : 'bg-brand-500 text-white'
+                  ? 'bg-white/[0.06] text-white/80 rounded-tl-md'
+                  : 'bg-cyan-500 text-black font-medium rounded-tr-md'
               }`}
             >
               {msg.content}
@@ -73,11 +76,11 @@ export function AIChat({ messages, onSendMessage }: AIChatProps) {
 
       {/* Quick Actions */}
       <div className="px-3 py-2 flex gap-1.5 flex-wrap">
-        {['Optimiser', 'Suggérer une pause', 'Détecter conflits'].map((action) => (
+        {['Optimiser', 'Pause ?', 'Conflits'].map((action) => (
           <button
             key={action}
             onClick={() => onSendMessage(action)}
-            className="text-[10px] px-2 py-1 rounded-full border border-brand-500/30 text-brand-600 hover:bg-brand-500/10 transition-colors"
+            className="text-[10px] px-2.5 py-1.5 rounded-full border border-cyan-400/20 text-cyan-400/70 hover:bg-cyan-400/10 hover:text-cyan-400 transition-colors"
           >
             {action}
           </button>
@@ -85,19 +88,19 @@ export function AIChat({ messages, onSendMessage }: AIChatProps) {
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="p-3 border-t border-border-default">
-        <div className="flex items-center gap-2 bg-surface-200 rounded-xl px-3 py-2">
+      <form onSubmit={handleSubmit} className="p-3 border-t border-white/[0.06]">
+        <div className="flex items-center gap-2 bg-white/[0.05] border border-white/[0.08] rounded-2xl px-4 py-2.5">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Demandez à l'IA..."
-            className="flex-1 bg-transparent text-xs text-foreground placeholder:text-foreground-muted outline-none"
+            placeholder="Demandez à ti-lex..."
+            className="flex-1 bg-transparent text-xs text-white placeholder:text-white/20 outline-none"
           />
           <button
             type="submit"
             disabled={!input.trim()}
-            className="p-1.5 rounded-lg bg-brand-500 text-white disabled:opacity-40 hover:bg-brand-600 transition-colors"
+            className="w-7 h-7 rounded-full bg-cyan-500 text-black flex items-center justify-center disabled:opacity-20 hover:bg-cyan-400 transition-colors"
           >
             <Send size={12} />
           </button>
