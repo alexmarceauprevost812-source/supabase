@@ -1,9 +1,13 @@
-import { Plus, Bot, Bell, ChevronLeft, Smile, Power, Shield } from 'lucide-react'
+import { Plus, Bot, Bell, ChevronLeft, Smile, Power, Shield, Wand2 } from 'lucide-react'
 import { useState, useCallback } from 'react'
 import { AddEventModal } from './AddEventModal'
 import { AIChat } from './AIChat'
 import { CalendarSidebar } from './CalendarSidebar'
 import { DayTimeline } from './DayTimeline'
+import { ScreenEffect } from './effects/ScreenEffect'
+import { useWordEffects } from './effects/useWordEffects'
+import { DEFAULT_WORD_EFFECTS, EffectType, WordEffect } from './effects/wordEffects'
+import { WordEffectsSettings } from './effects/WordEffectsSettings'
 import { EmojiAnimations } from './emojis/EmojiAnimations'
 import { EmojiPanel } from './emojis/EmojiPanel'
 import { EventNotification } from './EventNotification'
@@ -41,6 +45,26 @@ export function AIAgendaApp() {
   const [notifEnabled, setNotifEnabled] = useState(true)
   const [showMascot, setShowMascot] = useState(false)
   const [showTVOff, setShowTVOff] = useState(false)
+  const [wordEffects, setWordEffects] = useState<WordEffect[]>(DEFAULT_WORD_EFFECTS)
+  const [showWordEffectSettings, setShowWordEffectSettings] = useState(false)
+  const [activeScreenEffect, setActiveScreenEffect] = useState<EffectType | null>(null)
+
+  const { checkText } = useWordEffects(wordEffects)
+
+  // Wrap sendMessage to detect trigger words
+  const handleSendMessage = useCallback((content: string) => {
+    sendMessage(content)
+    const effect = checkText(content)
+    if (effect) setActiveScreenEffect(effect)
+  }, [sendMessage, checkText])
+
+  // Wrap addEvent to detect trigger words in title/description
+  const handleAddEvent = useCallback((event: Parameters<typeof addEvent>[0]) => {
+    addEvent(event)
+    const text = `${event.title} ${event.description}`
+    const effect = checkText(text)
+    if (effect) setActiveScreenEffect(effect)
+  }, [addEvent, checkText])
 
   // Zoom transition into day view
   const handleDayClick = useCallback((date: Date) => {
@@ -146,6 +170,15 @@ export function AIAgendaApp() {
               title="Fermer (effet TV)"
             >
               <Power size={15} />
+            </button>
+
+            {/* Word Effects Button */}
+            <button
+              onClick={() => setShowWordEffectSettings(true)}
+              className="w-9 h-9 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400/60 hover:bg-purple-500/20 hover:text-purple-400 transition-all"
+              title="Effets sur les mots"
+            >
+              <Wand2 size={15} />
             </button>
 
             {/* Emoji Button */}
@@ -283,13 +316,13 @@ export function AIAgendaApp() {
       </div>
 
       {/* AI Chat Panel */}
-      {showAI && <AIChat messages={messages} onSendMessage={sendMessage} />}
+      {showAI && <AIChat messages={messages} onSendMessage={handleSendMessage} />}
 
       {/* Add Event Modal */}
       {showAddModal && (
         <AddEventModal
           selectedDate={selectedDate}
-          onAdd={addEvent}
+          onAdd={handleAddEvent}
           onClose={() => { setShowAddModal(false); setShowMascot(false) }}
           prefillTime={prefillTime}
           defaultVisibility={privacySettings.defaultVisibility}
@@ -307,6 +340,20 @@ export function AIAgendaApp() {
           onClose={() => setShowEmojis(false)}
           onSelectEmoji={handleSelectEmoji}
         />
+      )}
+
+      {/* Word Effects Settings */}
+      {showWordEffectSettings && (
+        <WordEffectsSettings
+          effects={wordEffects}
+          onUpdate={setWordEffects}
+          onClose={() => setShowWordEffectSettings(false)}
+        />
+      )}
+
+      {/* Screen Effect (triggered by word) */}
+      {activeScreenEffect && (
+        <ScreenEffect effectType={activeScreenEffect} onComplete={() => setActiveScreenEffect(null)} />
       )}
 
       {/* Privacy Settings Panel */}
