@@ -144,7 +144,7 @@ export function CalendarSidebar({ selectedDate, onDateChange, onDayClick, events
 
   return (
     <div
-      className="bg-[#111118] rounded-2xl p-5 mx-4 mt-4 overflow-hidden touch-pan-y select-none"
+      className="bg-[#111118] rounded-none p-4 overflow-hidden touch-pan-y select-none w-full"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >

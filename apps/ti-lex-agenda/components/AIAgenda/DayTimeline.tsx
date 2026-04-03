@@ -77,7 +77,7 @@ export function DayTimeline({ events, selectedDate, onDeleteEvent, onAddEventAtT
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* Day Header */}
-      <div className="px-5 py-3 flex items-center justify-between border-b border-white/[0.06]">
+      <div className="px-3 py-3 flex items-center justify-between border-b border-white/[0.06]">
         <div>
           <h2 className="text-lg font-bold text-white">
             {isToday ? "Aujourd'hui" : DAYS_FR[selectedDate.getDay()]}

@@ -158,7 +158,7 @@ export function AIAgendaApp() {
       {/* Main Panel */}
       <div className="flex-1 flex flex-col min-w-0 relative overflow-hidden">
         {/* Top Bar */}
-        <div className="flex items-center justify-between px-5 py-3 z-10">
+        <div className="flex items-center justify-between px-3 py-2 z-10">
           <div className="flex items-center gap-2.5">
             {view === 'day' ? (
               <button
@@ -293,7 +293,7 @@ export function AIAgendaApp() {
               />
 
               {/* Quick stats + emoji packs showcase */}
-              <div className="px-5 py-4 flex-1 space-y-3 overflow-auto">
+              <div className="px-3 py-3 flex-1 space-y-3 overflow-auto">
                 {/* Stats */}
                 <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4">
                   <p className="text-xs text-white/30 mb-3 uppercase tracking-wider font-semibold">
