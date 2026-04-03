@@ -4,15 +4,17 @@ import { Sidebar } from 'components/interfaces/Sidebar'
 import { useLocalStorageQuery } from 'hooks/misc/useLocalStorage'
 import { useCheckLatestDeploy } from 'hooks/use-check-latest-deploy'
 import { useRouter } from 'next/router'
-import { PropsWithChildren, useEffect, useState } from 'react'
+import { PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import { useAppStateSnapshot } from 'state/app-state'
 import { ResizablePanel, ResizablePanelGroup, SidebarProvider } from 'ui'
 
 import { BannerStack } from '../ui/BannerStack/BannerStack'
 import { BannerStackProvider } from '../ui/BannerStack/BannerStackProvider'
 import { LayoutHeader } from './Navigation/LayoutHeader/LayoutHeader'
-import MobileNavigationBar from './Navigation/NavigationBar/MobileNavigationBar'
+import MobileLeftMenu from './Navigation/NavigationBar/MobileLeftMenu'
+import MobileRightMenu from './Navigation/NavigationBar/MobileRightMenu'
 import { MobileSheetProvider } from './Navigation/NavigationBar/MobileSheetContext'
+import MobileTopBar from './Navigation/NavigationBar/MobileTopBar'
 import { StudioMobileSheetNav } from './Navigation/NavigationBar/StudioMobileSheetNav'
 import { LayoutSidebar } from './ProjectLayout/LayoutSidebar'
 import { LayoutSidebarProvider } from './ProjectLayout/LayoutSidebar/LayoutSidebarProvider'
@@ -57,6 +59,15 @@ export const DefaultLayout = ({
 
   useCheckLatestDeploy()
 
+  // Mobile menu states
+  const [leftMenuOpen, setLeftMenuOpen] = useState(false)
+  const [rightMenuOpen, setRightMenuOpen] = useState(false)
+
+  const openLeftMenu = useCallback(() => setLeftMenuOpen(true), [])
+  const closeLeftMenu = useCallback(() => setLeftMenuOpen(false), [])
+  const openRightMenu = useCallback(() => setRightMenuOpen(true), [])
+  const closeRightMenu = useCallback(() => setRightMenuOpen(false), [])
+
   const contentMinSizePercentage = 50
   const contentMaxSizePercentage = 70
 
@@ -82,9 +93,10 @@ export const DefaultLayout = ({
                 {/* Top Banner */}
                 <AppBannerWrapper />
                 <div className="flex-shrink-0">
-                  <MobileNavigationBar
-                    hideMobileMenu={hideMobileMenu}
-                    backToDashboardURL={backToDashboardURL}
+                  {/* New mobile top bar with wallet, settings, camera, photos + left/right menu triggers */}
+                  <MobileTopBar
+                    onOpenLeftMenu={openLeftMenu}
+                    onOpenRightMenu={openRightMenu}
                   />
                   <LayoutHeader headerTitle={headerTitle} backToDashboardURL={backToDashboardURL} />
                 </div>
@@ -118,6 +130,12 @@ export const DefaultLayout = ({
 
               <BannerStack />
               <StudioMobileSheetNav />
+
+              {/* Mobile left menu - Work tools */}
+              <MobileLeftMenu open={leftMenuOpen} onClose={closeLeftMenu} />
+
+              {/* Mobile right menu - Most used apps */}
+              <MobileRightMenu open={rightMenuOpen} onClose={closeRightMenu} />
             </BannerStackProvider>
           </MobileSheetProvider>
         </ProjectContextProvider>
