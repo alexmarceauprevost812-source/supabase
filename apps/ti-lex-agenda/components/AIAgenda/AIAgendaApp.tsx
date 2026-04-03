@@ -283,66 +283,13 @@ export function AIAgendaApp() {
           style={{ transitionDuration: '400ms', transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)' }}
         >
           {view === 'month' ? (
-            <>
-              {/* Calendar Month View */}
-              <CalendarSidebar
-                selectedDate={selectedDate}
-                onDateChange={setSelectedDate}
-                onDayClick={handleDayClick}
-                events={events}
-              />
-
-              {/* Quick stats + emoji packs showcase */}
-              <div className="px-3 py-3 flex-1 space-y-3 overflow-auto">
-                {/* Stats */}
-                <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4">
-                  <p className="text-xs text-white/30 mb-3 uppercase tracking-wider font-semibold">
-                    Cliquez sur un jour pour voir le planning
-                  </p>
-                  <div className="flex gap-3">
-                    <div className="flex-1 bg-white/[0.04] rounded-xl p-3 text-center">
-                      <span className="text-2xl font-black text-cyan-400">{events.length}</span>
-                      <p className="text-[10px] text-white/30 mt-1">Total</p>
-                    </div>
-                    <div className="flex-1 bg-white/[0.04] rounded-xl p-3 text-center">
-                      <span className="text-2xl font-black text-amber-400">
-                        {events.filter((e) => e.date === new Date().toISOString().split('T')[0]).length}
-                      </span>
-                      <p className="text-[10px] text-white/30 mt-1">Aujourd'hui</p>
-                    </div>
-                    <div className="flex-1 bg-white/[0.04] rounded-xl p-3 text-center">
-                      <span className="text-2xl font-black text-purple-400">
-                        {events.filter((e) => e.priority === 'high').length}
-                      </span>
-                      <p className="text-[10px] text-white/30 mt-1">Urgents</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Emoji Packs Teaser */}
-                <button
-                  onClick={() => setShowEmojis(true)}
-                  className="w-full bg-gradient-to-r from-purple-500/10 via-cyan-500/10 to-amber-500/10 border border-white/[0.06] rounded-2xl p-4 text-left hover:border-white/[0.12] transition-all group"
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-bold text-white flex items-center gap-2">
-                        <Smile size={14} className="text-purple-400" />
-                        Émojis Animés ti-lex
-                      </p>
-                      <p className="text-[10px] text-white/30 mt-1">
-                        3 packs : Windows 98 · Windows 8 · Futuriste 2026
-                      </p>
-                    </div>
-                    <div className="flex gap-1">
-                      <div className="w-7 h-7 rounded-lg bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-[7px] font-black text-[#000080]" style={{ fontFamily: 'monospace' }}>98</div>
-                      <div className="w-7 h-7 rounded-lg bg-[#2d89ef] flex items-center justify-center text-[7px] font-black text-white">W8</div>
-                      <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-500 flex items-center justify-center text-[8px] text-white">✦</div>
-                    </div>
-                  </div>
-                </button>
-              </div>
-            </>
+            /* Calendar Month View — fills 100% of screen */
+            <CalendarSidebar
+              selectedDate={selectedDate}
+              onDateChange={setSelectedDate}
+              onDayClick={handleDayClick}
+              events={events}
+            />
           ) : (
             /* Day Timeline View */
             <DayTimeline

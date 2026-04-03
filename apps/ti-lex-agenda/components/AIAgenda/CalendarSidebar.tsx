@@ -144,13 +144,13 @@ export function CalendarSidebar({ selectedDate, onDateChange, onDayClick, events
 
   return (
     <div
-      className="bg-[#111118] rounded-none p-4 overflow-hidden touch-pan-y select-none w-full"
+      className="bg-[#111118] rounded-none px-4 py-3 overflow-hidden touch-pan-y select-none w-full flex-1 flex flex-col"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
       {/* Page turn animation wrapper */}
       <div
-        className="transition-all duration-300 ease-out"
+        className="transition-all duration-300 ease-out flex-1 flex flex-col"
         style={{
           transform:
             pageAnim === 'left'
@@ -171,7 +171,7 @@ export function CalendarSidebar({ selectedDate, onDateChange, onDayClick, events
         >
           <ChevronLeft size={18} />
         </button>
-        <h2 className="text-base font-semibold text-white">
+        <h2 className="text-xl font-bold text-white">
           {MONTHS[month]} {year}
         </h2>
         <button
@@ -183,16 +183,16 @@ export function CalendarSidebar({ selectedDate, onDateChange, onDayClick, events
       </div>
 
       {/* Day Names */}
-      <div className="grid grid-cols-7 mb-2">
+      <div className="grid grid-cols-7">
         {DAYS.map((day, i) => (
-          <div key={i} className="text-center text-[11px] font-medium text-white/30 py-1">
+          <div key={i} className="text-center text-sm font-semibold text-white/40 py-2">
             {day}
           </div>
         ))}
       </div>
 
       {/* Days Grid */}
-      <div className="grid grid-cols-7 gap-y-1">
+      <div className="grid grid-cols-7 flex-1 content-stretch">
         {days.map((day, i) => {
           if (day === null) return <div key={i} />
 
@@ -208,7 +208,7 @@ export function CalendarSidebar({ selectedDate, onDateChange, onDayClick, events
             <button
               key={i}
               onClick={() => handleDayClick(day)}
-              className={`relative flex flex-col items-center py-1.5 rounded-xl transition-all duration-300 ${
+              className={`relative flex flex-col items-center justify-center rounded-xl transition-all duration-300 ${
                 selected
                   ? 'bg-cyan-500 shadow-[0_0_15px_rgba(34,211,238,0.3)] scale-110 z-10'
                   : todayDay
@@ -260,7 +260,7 @@ export function CalendarSidebar({ selectedDate, onDateChange, onDayClick, events
 
               {/* Day number */}
               <span
-                className={`text-sm leading-6 relative z-10 transition-all duration-300 ${
+                className={`text-lg leading-7 relative z-10 transition-all duration-300 ${
                   selected
                     ? 'text-white font-bold'
                     : todayDay
@@ -281,7 +281,7 @@ export function CalendarSidebar({ selectedDate, onDateChange, onDayClick, events
                   {dots.map((cat, j) => (
                     <div
                       key={j}
-                      className={`w-[4px] h-[4px] rounded-full ${
+                      className={`w-[6px] h-[6px] rounded-full ${
                         selected
                           ? 'bg-white'
                           : todayDay
