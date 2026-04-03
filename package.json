@@ -2,8 +2,5 @@
   "name": "ti-lex-al",
   "version": "7.0.0",
   "private": true,
-  "description": "TI-LEX-AL — Plateforme IA Officielle",
-  "dependencies": {
-    "openai": "^4.52.0"
-  }
+  "description": "TI-LEX-AL — Plateforme IA Officielle"
 }
