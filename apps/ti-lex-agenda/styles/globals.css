@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* === MOBILE APP — 100% SCREEN === */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100% !important;
+  height: 100% !important;
+  height: 100dvh !important;
+  background: #0a0a0f;
+  color: white;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#__next {
+  width: 100% !important;
+  height: 100% !important;
+  height: 100dvh !important;
+}
+
+/* === APP CONTAINER — ALWAYS 100% === */
+.app-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  height: 100dvh !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* === SAFE AREA (iPhone notch) === */
+@supports (padding: env(safe-area-inset-top)) {
+  .app-container {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* === HD RENDERING === */
+img, svg {
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* === SMOOTH & HIDE SCROLLBARS === */
+* {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* === INPUTS (prevent iOS zoom) === */
+input, textarea {
+  -webkit-user-select: text;
+  user-select: text;
+  font-size: 16px !important;
+}
