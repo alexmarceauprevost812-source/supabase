@@ -4,6 +4,7 @@ import { AddEventModal } from './AddEventModal'
 import { AIChat } from './AIChat'
 import { CalendarSidebar } from './CalendarSidebar'
 import { EventList } from './EventList'
+import { EventNotification } from './EventNotification'
 import { LockScreen } from './LockScreen'
 import { useAgendaStore } from './useAgendaStore'
 
@@ -84,6 +85,9 @@ export function AIAgendaApp() {
           onClose={() => setShowAddModal(false)}
         />
       )}
+
+      {/* Event Notification - 5 min before */}
+      <EventNotification events={events} />
     </div>
   )
 }
