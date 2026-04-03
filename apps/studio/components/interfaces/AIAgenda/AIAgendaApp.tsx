@@ -8,6 +8,7 @@ import { EmojiAnimations } from './emojis/EmojiAnimations'
 import { EmojiPanel } from './emojis/EmojiPanel'
 import { EventNotification } from './EventNotification'
 import { LockScreen } from './LockScreen'
+import { MascotPopup } from './MascotPopup'
 import { useAgendaStore } from './useAgendaStore'
 
 type AppView = 'month' | 'day'
@@ -31,6 +32,7 @@ export function AIAgendaApp() {
   const [isZooming, setIsZooming] = useState(false)
   const [prefillTime, setPrefillTime] = useState<string | undefined>()
   const [notifEnabled, setNotifEnabled] = useState(true)
+  const [showMascot, setShowMascot] = useState(false)
 
   // Zoom transition into day view
   const handleDayClick = useCallback((date: Date) => {
@@ -54,11 +56,15 @@ export function AIAgendaApp() {
   // Add event at specific time from timeline
   const handleAddAtTime = useCallback((time: string) => {
     setPrefillTime(time)
-    setShowAddModal(true)
+    setShowMascot(true)
   }, [])
 
   const handleOpenAddModal = useCallback(() => {
     setPrefillTime(undefined)
+    setShowMascot(true)
+  }, [])
+
+  const handleMascotComplete = useCallback(() => {
     setShowAddModal(true)
   }, [])
 
@@ -245,9 +251,14 @@ export function AIAgendaApp() {
         <AddEventModal
           selectedDate={selectedDate}
           onAdd={addEvent}
-          onClose={() => setShowAddModal(false)}
+          onClose={() => { setShowAddModal(false); setShowMascot(false) }}
           prefillTime={prefillTime}
         />
+      )}
+
+      {/* Mascot Popup */}
+      {showMascot && (
+        <MascotPopup onComplete={handleMascotComplete} />
       )}
 
       {/* Emoji Panel */}
