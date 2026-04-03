@@ -1,4 +1,4 @@
-import { Plus, Bot, Bell, ChevronLeft, Smile } from 'lucide-react'
+import { Plus, Bot, Bell, ChevronLeft, Smile, Power } from 'lucide-react'
 import { useState, useCallback } from 'react'
 import { AddEventModal } from './AddEventModal'
 import { AIChat } from './AIChat'
@@ -9,6 +9,7 @@ import { EmojiPanel } from './emojis/EmojiPanel'
 import { EventNotification } from './EventNotification'
 import { LockScreen } from './LockScreen'
 import { MascotPopup } from './MascotPopup'
+import { TVShutdown } from './TVShutdown'
 import { useAgendaStore } from './useAgendaStore'
 
 type AppView = 'month' | 'day'
@@ -33,6 +34,7 @@ export function AIAgendaApp() {
   const [prefillTime, setPrefillTime] = useState<string | undefined>()
   const [notifEnabled, setNotifEnabled] = useState(true)
   const [showMascot, setShowMascot] = useState(false)
+  const [showTVOff, setShowTVOff] = useState(false)
 
   // Zoom transition into day view
   const handleDayClick = useCallback((date: Date) => {
@@ -44,7 +46,20 @@ export function AIAgendaApp() {
     }, 400)
   }, [setSelectedDate])
 
-  // Back to month view
+  // Back = TV shutdown effect then lock the app
+  const handleBack = useCallback(() => {
+    setShowTVOff(true)
+  }, [])
+
+  const handleTVShutdownComplete = useCallback(() => {
+    setShowTVOff(false)
+    setView('month')
+    setIsLocked(true)
+    setShowAI(false)
+    setShowEmojis(false)
+  }, [])
+
+  // Back to month view (from day view, no TV effect)
   const handleBackToMonth = useCallback(() => {
     setIsZooming(true)
     setTimeout(() => {
@@ -109,6 +124,15 @@ export function AIAgendaApp() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Power Off / Back button */}
+            <button
+              onClick={handleBack}
+              className="w-9 h-9 rounded-full bg-white/[0.06] flex items-center justify-center text-white/20 hover:bg-red-500/20 hover:text-red-400 transition-all"
+              title="Fermer (effet TV)"
+            >
+              <Power size={15} />
+            </button>
+
             {/* Emoji Button */}
             <button
               onClick={() => setShowEmojis(!showEmojis)}
@@ -268,6 +292,9 @@ export function AIAgendaApp() {
           onSelectEmoji={handleSelectEmoji}
         />
       )}
+
+      {/* TV Shutdown Effect */}
+      {showTVOff && <TVShutdown onComplete={handleTVShutdownComplete} />}
 
       {/* Event Notification */}
       {notifEnabled && <EventNotification events={events} />}
