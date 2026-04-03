@@ -6,13 +6,19 @@ interface AddEventModalProps {
   selectedDate: Date
   onAdd: (event: Omit<AgendaEvent, 'id'>) => void
   onClose: () => void
+  prefillTime?: string
 }
 
-export function AddEventModal({ selectedDate, onAdd, onClose }: AddEventModalProps) {
+export function AddEventModal({ selectedDate, onAdd, onClose, prefillTime }: AddEventModalProps) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [startTime, setStartTime] = useState('09:00')
-  const [endTime, setEndTime] = useState('10:00')
+  const [startTime, setStartTime] = useState(prefillTime || '09:00')
+  const [endTime, setEndTime] = useState(() => {
+    if (!prefillTime) return '10:00'
+    const [h, m] = prefillTime.split(':').map(Number)
+    const endH = m >= 0 ? h + 1 : h
+    return `${endH.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`
+  })
   const [category, setCategory] = useState<EventCategory>('task')
   const [priority, setPriority] = useState<EventPriority>('medium')
 

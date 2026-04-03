@@ -1,9 +1,11 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { AgendaEvent } from './types'
 
 interface CalendarSidebarProps {
   selectedDate: Date
   onDateChange: (date: Date) => void
+  onDayClick: (date: Date) => void
   events: AgendaEvent[]
 }
 
@@ -30,15 +32,27 @@ function getFirstDayOfMonth(year: number, month: number) {
   return day === 0 ? 6 : day - 1
 }
 
-export function CalendarSidebar({ selectedDate, onDateChange, events }: CalendarSidebarProps) {
+export function CalendarSidebar({ selectedDate, onDateChange, onDayClick, events }: CalendarSidebarProps) {
   const year = selectedDate.getFullYear()
   const month = selectedDate.getMonth()
   const daysInMonth = getDaysInMonth(year, month)
   const firstDay = getFirstDayOfMonth(year, month)
   const today = new Date()
 
-  const prevMonth = () => onDateChange(new Date(year, month - 1, 1))
-  const nextMonth = () => onDateChange(new Date(year, month + 1, 1))
+  // Animated X cascade: track which past days have been "revealed"
+  const [revealedCount, setRevealedCount] = useState(0)
+  const [animKey, setAnimKey] = useState(0)
+
+  const prevMonth = () => {
+    onDateChange(new Date(year, month - 1, 1))
+    setRevealedCount(0)
+    setAnimKey((k) => k + 1)
+  }
+  const nextMonth = () => {
+    onDateChange(new Date(year, month + 1, 1))
+    setRevealedCount(0)
+    setAnimKey((k) => k + 1)
+  }
 
   const days: (number | null)[] = []
   for (let i = 0; i < firstDay; i++) days.push(null)
@@ -53,14 +67,49 @@ export function CalendarSidebar({ selectedDate, onDateChange, events }: Calendar
     return d < t
   }
 
+  const isFuture = (day: number) => {
+    const d = new Date(year, month, day)
+    const t = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    return d > t
+  }
+
   const isSelected = (day: number) =>
     day === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear()
+
+  // Count past days for cascade animation
+  const pastDays = days.filter((d) => d !== null && isPast(d))
+  const pastDayNumbers = pastDays as number[]
+
+  // Cascade animation: reveal X marks one by one
+  useEffect(() => {
+    setRevealedCount(0)
+    if (pastDayNumbers.length === 0) return
+
+    let count = 0
+    const interval = setInterval(() => {
+      count++
+      setRevealedCount(count)
+      if (count >= pastDayNumbers.length) clearInterval(interval)
+    }, 60) // 60ms between each X appearing
+
+    return () => clearInterval(interval)
+  }, [animKey, month, year, pastDayNumbers.length])
+
+  function getPastIndex(day: number): number {
+    return pastDayNumbers.indexOf(day)
+  }
 
   function getEventDotsForDay(day: number) {
     const dateStr = new Date(year, month, day).toISOString().split('T')[0]
     const dayEvents = events.filter((e) => e.date === dateStr)
     const categories = [...new Set(dayEvents.map((e) => e.category))]
     return categories.slice(0, 3)
+  }
+
+  const handleDayClick = (day: number) => {
+    const clickedDate = new Date(year, month, day)
+    onDateChange(clickedDate)
+    onDayClick(clickedDate)
   }
 
   return (
@@ -96,66 +145,101 @@ export function CalendarSidebar({ selectedDate, onDateChange, events }: Calendar
       {/* Days Grid */}
       <div className="grid grid-cols-7 gap-y-1">
         {days.map((day, i) => {
-          const dots = day ? getEventDotsForDay(day) : []
-          const past = day ? isPast(day) : false
-          const todayDay = day ? isToday(day) : false
-          const selected = day ? isSelected(day) : false
+          if (day === null) return <div key={i} />
+
+          const dots = getEventDotsForDay(day)
+          const past = isPast(day)
+          const todayDay = isToday(day)
+          const future = isFuture(day)
+          const selected = isSelected(day)
+          const pastIdx = past ? getPastIndex(day) : -1
+          const xRevealed = past && pastIdx < revealedCount
 
           return (
             <button
               key={i}
-              disabled={day === null}
-              onClick={() => day && onDateChange(new Date(year, month, day))}
-              className={`relative flex flex-col items-center py-1 rounded-xl transition-all ${
-                day === null
-                  ? ''
-                  : selected
-                    ? 'bg-cyan-500 shadow-[0_0_15px_rgba(34,211,238,0.3)]'
-                    : todayDay
-                      ? 'bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.3)]'
-                      : past
-                        ? 'opacity-40'
-                        : 'hover:bg-white/[0.05]'
+              onClick={() => handleDayClick(day)}
+              className={`relative flex flex-col items-center py-1.5 rounded-xl transition-all duration-300 ${
+                selected
+                  ? 'bg-cyan-500 shadow-[0_0_15px_rgba(34,211,238,0.3)] scale-110 z-10'
+                  : todayDay
+                    ? 'z-10'
+                    : future
+                      ? 'hover:bg-white/[0.06] hover:scale-105'
+                      : ''
               }`}
             >
-              {/* Past days: X mark */}
-              {day !== null && past && !selected && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <svg width="20" height="20" viewBox="0 0 20 20" className="text-red-500/60">
-                    <line x1="4" y1="4" x2="16" y2="16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                    <line x1="16" y1="4" x2="4" y2="16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              {/* TODAY: Yellow glow effect */}
+              {todayDay && !selected && (
+                <>
+                  <div className="absolute inset-0 rounded-xl bg-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.5),0_0_40px_rgba(251,191,36,0.2)]" />
+                  <div
+                    className="absolute inset-[-3px] rounded-2xl border-2 border-amber-400/40"
+                    style={{ animation: 'todayPulse 2s ease-in-out infinite' }}
+                  />
+                </>
+              )}
+
+              {/* PAST: Animated X mark (small to big cascade) */}
+              {past && !selected && (
+                <div
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                  style={{
+                    opacity: xRevealed ? 1 : 0,
+                    transform: xRevealed ? 'scale(1)' : 'scale(0.2)',
+                    transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  }}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <line
+                      x1="5" y1="5" x2="19" y2="19"
+                      stroke="#ef4444"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeOpacity="0.7"
+                    />
+                    <line
+                      x1="19" y1="5" x2="5" y2="19"
+                      stroke="#ef4444"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeOpacity="0.7"
+                    />
                   </svg>
                 </div>
               )}
 
+              {/* Day number */}
               <span
-                className={`text-sm leading-6 relative z-10 ${
-                  day === null
-                    ? ''
-                    : selected
-                      ? 'text-white font-bold'
-                      : todayDay
-                        ? 'text-black font-black'
-                        : past
-                          ? 'text-white/40 line-through'
-                          : 'text-white/70'
+                className={`text-sm leading-6 relative z-10 transition-all duration-300 ${
+                  selected
+                    ? 'text-white font-bold'
+                    : todayDay
+                      ? 'text-black font-black'
+                      : past
+                        ? xRevealed
+                          ? 'text-white/20'
+                          : 'text-white/50'
+                        : 'text-white/80'
                 }`}
               >
                 {day}
               </span>
 
-              {/* Today: "O" ring indicator */}
-              {todayDay && !selected && (
-                <div className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-black bg-amber-300 z-20" />
-              )}
-
+              {/* Event dots */}
               {dots.length > 0 && (
-                <div className="flex gap-[3px] mt-0.5">
+                <div className="flex gap-[3px] mt-0.5 relative z-10">
                   {dots.map((cat, j) => (
                     <div
                       key={j}
                       className={`w-[4px] h-[4px] rounded-full ${
-                        selected ? 'bg-white' : todayDay ? 'bg-black/40' : CATEGORY_COLORS[cat]
+                        selected
+                          ? 'bg-white'
+                          : todayDay
+                            ? 'bg-black/50'
+                            : past
+                              ? 'bg-white/20'
+                              : CATEGORY_COLORS[cat]
                       }`}
                     />
                   ))}
@@ -165,6 +249,19 @@ export function CalendarSidebar({ selectedDate, onDateChange, events }: Calendar
           )
         })}
       </div>
+
+      <style jsx>{`
+        @keyframes todayPulse {
+          0%, 100% {
+            opacity: 0.4;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.8;
+            transform: scale(1.08);
+          }
+        }
+      `}</style>
     </div>
   )
 }
