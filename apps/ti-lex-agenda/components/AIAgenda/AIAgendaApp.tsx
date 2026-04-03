@@ -17,6 +17,7 @@ import { LockScreen } from './LockScreen'
 import { MascotPopup } from './MascotPopup'
 import { PrivacySettingsPanel } from './PrivacySettings'
 import { TVShutdown } from './TVShutdown'
+import { TVStartup } from './TVStartup'
 import { useAgendaStore } from './useAgendaStore'
 
 type AppView = 'month' | 'day'
@@ -34,6 +35,7 @@ export function AIAgendaApp() {
     sendMessage,
   } = useAgendaStore()
 
+  const [showStartup, setShowStartup] = useState(true)
   const [isLocked, setIsLocked] = useState(true)
   const [showAddModal, setShowAddModal] = useState(false)
   const [showPrivacy, setShowPrivacy] = useState(false)
@@ -121,6 +123,12 @@ export function AIAgendaApp() {
     setShowEmojis(false)
   }, [sendMessage])
 
+  // Phase 1: TV Startup animation (old 80s TV turning ON)
+  if (showStartup) {
+    return <TVStartup onComplete={() => setShowStartup(false)} />
+  }
+
+  // Phase 2: Lock screen (PIN code)
   if (isLocked) {
     return <LockScreen onUnlock={() => setIsLocked(false)} />
   }
