@@ -151,7 +151,7 @@ export function AIAgendaApp() {
   }
 
   return (
-    <div className="flex h-full bg-[#0a0a0f] text-white">
+    <div className="app-container flex h-full bg-[#0a0a0f] text-white">
       {/* Global emoji animations */}
       <EmojiAnimations />
 

@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { AgendaEvent } from './types'
 
 interface CalendarSidebarProps {
@@ -43,16 +43,46 @@ export function CalendarSidebar({ selectedDate, onDateChange, onDayClick, events
   const [revealedCount, setRevealedCount] = useState(0)
   const [animKey, setAnimKey] = useState(0)
 
-  const prevMonth = () => {
-    onDateChange(new Date(year, month - 1, 1))
-    setRevealedCount(0)
-    setAnimKey((k) => k + 1)
-  }
-  const nextMonth = () => {
-    onDateChange(new Date(year, month + 1, 1))
-    setRevealedCount(0)
-    setAnimKey((k) => k + 1)
-  }
+  // Page turn animation state
+  const [pageAnim, setPageAnim] = useState<'none' | 'left' | 'right'>('none')
+  const touchStartX = useRef(0)
+  const touchDragging = useRef(false)
+
+  const prevMonth = useCallback(() => {
+    setPageAnim('right')
+    setTimeout(() => {
+      onDateChange(new Date(year, month - 1, 1))
+      setRevealedCount(0)
+      setAnimKey((k) => k + 1)
+      setPageAnim('none')
+    }, 350)
+  }, [year, month, onDateChange])
+
+  const nextMonth = useCallback(() => {
+    setPageAnim('left')
+    setTimeout(() => {
+      onDateChange(new Date(year, month + 1, 1))
+      setRevealedCount(0)
+      setAnimKey((k) => k + 1)
+      setPageAnim('none')
+    }, 350)
+  }, [year, month, onDateChange])
+
+  // Touch swipe handlers for page-turn effect
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+    touchDragging.current = true
+  }, [])
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!touchDragging.current) return
+    touchDragging.current = false
+    const diff = touchStartX.current - e.changedTouches[0].clientX
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) nextMonth() // swipe left → next month
+      else prevMonth() // swipe right → prev month
+    }
+  }, [nextMonth, prevMonth])
 
   const days: (number | null)[] = []
   for (let i = 0; i < firstDay; i++) days.push(null)
@@ -113,7 +143,26 @@ export function CalendarSidebar({ selectedDate, onDateChange, onDayClick, events
   }
 
   return (
-    <div className="bg-[#111118] rounded-2xl p-5 mx-4 mt-4">
+    <div
+      className="bg-[#111118] rounded-2xl p-5 mx-4 mt-4 overflow-hidden touch-pan-y select-none"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* Page turn animation wrapper */}
+      <div
+        className="transition-all duration-300 ease-out"
+        style={{
+          transform:
+            pageAnim === 'left'
+              ? 'translateX(-100%) rotateY(15deg) scale(0.95)'
+              : pageAnim === 'right'
+                ? 'translateX(100%) rotateY(-15deg) scale(0.95)'
+                : 'translateX(0) rotateY(0deg) scale(1)',
+          opacity: pageAnim !== 'none' ? 0 : 1,
+          transformOrigin: pageAnim === 'left' ? 'left center' : 'right center',
+          perspective: '800px',
+        }}
+      >
       {/* Month Header */}
       <div className="flex items-center justify-between mb-5">
         <button
@@ -249,6 +298,7 @@ export function CalendarSidebar({ selectedDate, onDateChange, onDayClick, events
           )
         })}
       </div>
+      </div>{/* close page turn animation wrapper */}
 
       <style jsx>{`
         @keyframes todayPulse {
