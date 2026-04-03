@@ -1,6 +1,7 @@
 import { Plus, Bot, Bell, ChevronLeft, Smile, Power, Shield, Wand2, Info } from 'lucide-react'
 import { useState, useCallback } from 'react'
 import { AboutCreator } from './AboutCreator'
+import { AuthScreen } from './AuthScreen'
 import { AddEventModal } from './AddEventModal'
 import { AIChat } from './AIChat'
 import { CalendarSidebar } from './CalendarSidebar'
@@ -36,6 +37,7 @@ export function AIAgendaApp() {
   } = useAgendaStore()
 
   const [showStartup, setShowStartup] = useState(true)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLocked, setIsLocked] = useState(true)
   const [showAddModal, setShowAddModal] = useState(false)
   const [showPrivacy, setShowPrivacy] = useState(false)
@@ -128,7 +130,12 @@ export function AIAgendaApp() {
     return <TVStartup onComplete={() => setShowStartup(false)} />
   }
 
-  // Phase 2: Lock screen (PIN code)
+  // Phase 2: Auth screen (inscription / connexion / invité)
+  if (!isAuthenticated) {
+    return <AuthScreen onAuth={() => setIsAuthenticated(true)} />
+  }
+
+  // Phase 3: Lock screen (PIN code)
   if (isLocked) {
     return <LockScreen onUnlock={() => setIsLocked(false)} />
   }
