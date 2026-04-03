@@ -151,12 +151,12 @@ export function AIAgendaApp() {
   }
 
   return (
-    <div className="app-container flex h-full bg-[#0a0a0f] text-white">
+    <div className="app-container h-full bg-[#0a0a0f] text-white relative overflow-hidden">
       {/* Global emoji animations */}
       <EmojiAnimations />
 
-      {/* Main Panel */}
-      <div className="flex-1 flex flex-col min-w-0 relative overflow-hidden">
+      {/* Main Panel - full width */}
+      <div className="w-full h-full flex flex-col relative overflow-hidden">
         {/* Top Bar */}
         <div className="flex items-center justify-between px-3 py-2 z-10">
           <div className="flex items-center gap-2.5">
@@ -358,14 +358,18 @@ export function AIAgendaApp() {
         <button
           onClick={handleOpenAddModal}
           className="fixed bottom-6 w-14 h-14 rounded-full bg-cyan-500 hover:bg-cyan-400 text-black flex items-center justify-center shadow-[0_4px_20px_rgba(34,211,238,0.4)] hover:shadow-[0_4px_30px_rgba(34,211,238,0.5)] transition-all hover:scale-105 active:scale-95 z-20"
-          style={{ right: showAI ? '344px' : '24px' }}
+          style={{ right: '16px' }}
         >
           <Plus size={24} strokeWidth={2.5} />
         </button>
       </div>
 
-      {/* AI Chat Panel */}
-      {showAI && <AIChat messages={messages} onSendMessage={handleSendMessage} />}
+      {/* AI Chat Panel - overlay on mobile */}
+      {showAI && (
+        <div className="absolute inset-0 z-40 bg-[#0d0d14]">
+          <AIChat messages={messages} onSendMessage={handleSendMessage} />
+        </div>
+      )}
 
       {/* Add Event Modal */}
       {showAddModal && (

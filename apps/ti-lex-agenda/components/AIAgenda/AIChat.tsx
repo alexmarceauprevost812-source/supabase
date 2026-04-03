@@ -23,7 +23,7 @@ export function AIChat({ messages, onSendMessage }: AIChatProps) {
   }
 
   return (
-    <div className="w-80 border-l border-white/[0.06] bg-[#0d0d14] flex flex-col">
+    <div className="w-full h-full bg-[#0d0d14] flex flex-col">
       {/* Header */}
       <div className="px-4 py-3 border-b border-white/[0.06]">
         <div className="flex items-center gap-3">
