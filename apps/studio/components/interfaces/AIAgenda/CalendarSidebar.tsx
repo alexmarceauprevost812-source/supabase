@@ -47,6 +47,12 @@ export function CalendarSidebar({ selectedDate, onDateChange, events }: Calendar
   const isToday = (day: number) =>
     day === today.getDate() && month === today.getMonth() && year === today.getFullYear()
 
+  const isPast = (day: number) => {
+    const d = new Date(year, month, day)
+    const t = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    return d < t
+  }
+
   const isSelected = (day: number) =>
     day === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear()
 
@@ -91,41 +97,65 @@ export function CalendarSidebar({ selectedDate, onDateChange, events }: Calendar
       <div className="grid grid-cols-7 gap-y-1">
         {days.map((day, i) => {
           const dots = day ? getEventDotsForDay(day) : []
+          const past = day ? isPast(day) : false
+          const todayDay = day ? isToday(day) : false
+          const selected = day ? isSelected(day) : false
+
           return (
             <button
               key={i}
               disabled={day === null}
               onClick={() => day && onDateChange(new Date(year, month, day))}
-              className={`relative flex flex-col items-center py-1.5 rounded-xl transition-all ${
+              className={`relative flex flex-col items-center py-1 rounded-xl transition-all ${
                 day === null
                   ? ''
-                  : isSelected(day)
+                  : selected
                     ? 'bg-cyan-500 shadow-[0_0_15px_rgba(34,211,238,0.3)]'
-                    : isToday(day)
-                      ? 'bg-white/[0.08]'
-                      : 'hover:bg-white/[0.05]'
+                    : todayDay
+                      ? 'bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.3)]'
+                      : past
+                        ? 'opacity-40'
+                        : 'hover:bg-white/[0.05]'
               }`}
             >
+              {/* Past days: X mark */}
+              {day !== null && past && !selected && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <svg width="20" height="20" viewBox="0 0 20 20" className="text-red-500/60">
+                    <line x1="4" y1="4" x2="16" y2="16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    <line x1="16" y1="4" x2="4" y2="16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                </div>
+              )}
+
               <span
-                className={`text-sm leading-6 ${
+                className={`text-sm leading-6 relative z-10 ${
                   day === null
                     ? ''
-                    : isSelected(day)
+                    : selected
                       ? 'text-white font-bold'
-                      : isToday(day)
-                        ? 'text-cyan-400 font-semibold'
-                        : 'text-white/70'
+                      : todayDay
+                        ? 'text-black font-black'
+                        : past
+                          ? 'text-white/40 line-through'
+                          : 'text-white/70'
                 }`}
               >
                 {day}
               </span>
+
+              {/* Today: "O" ring indicator */}
+              {todayDay && !selected && (
+                <div className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-black bg-amber-300 z-20" />
+              )}
+
               {dots.length > 0 && (
                 <div className="flex gap-[3px] mt-0.5">
                   {dots.map((cat, j) => (
                     <div
                       key={j}
                       className={`w-[4px] h-[4px] rounded-full ${
-                        isSelected(day!) ? 'bg-white' : CATEGORY_COLORS[cat]
+                        selected ? 'bg-white' : todayDay ? 'bg-black/40' : CATEGORY_COLORS[cat]
                       }`}
                     />
                   ))}
