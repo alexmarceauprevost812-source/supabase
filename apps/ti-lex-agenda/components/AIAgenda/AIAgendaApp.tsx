@@ -163,13 +163,13 @@ export function AIAgendaApp() {
             {view === 'day' ? (
               <button
                 onClick={handleBackToMonth}
-                className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center text-white/50 hover:bg-white/10 hover:text-white transition-all"
+                className="w-12 h-12 rounded-full bg-white/[0.06] flex items-center justify-center text-white/50 hover:bg-white/10 hover:text-white transition-all"
               >
-                <ChevronLeft size={18} />
+                <ChevronLeft size={24} />
               </button>
             ) : (
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.15)]">
-                <span className="text-[10px] font-black text-white">tl</span>
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.15)]">
+                <span className="text-sm font-black text-white">tl</span>
               </div>
             )}
             <div>
@@ -180,93 +180,93 @@ export function AIAgendaApp() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 overflow-x-auto flex-shrink-0">
             {/* Security Settings */}
             <button
               onClick={() => setShowSecurity(true)}
-              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+              className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
                 securityConfig.lockEnabled
                   ? 'bg-cyan-500/15 text-cyan-400'
                   : 'bg-white/[0.06] text-white/30 hover:bg-white/10'
               }`}
               title="Sécurité de l'agenda"
             >
-              <Lock size={14} />
+              <Lock size={20} />
             </button>
 
             {/* About / Copyright */}
             <button
               onClick={() => setShowAbout(true)}
-              className="w-9 h-9 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400/60 hover:bg-amber-500/20 hover:text-amber-400 transition-all"
+              className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400/60 hover:bg-amber-500/20 hover:text-amber-400 transition-all"
               title="À propos · Droits d'auteur"
             >
-              <Info size={15} />
+              <Info size={20} />
             </button>
 
             {/* Privacy Settings */}
             <button
               onClick={() => setShowPrivacy(true)}
-              className="w-9 h-9 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400/60 hover:bg-emerald-500/20 hover:text-emerald-400 transition-all"
+              className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400/60 hover:bg-emerald-500/20 hover:text-emerald-400 transition-all"
               title="Paramètres de confidentialité"
             >
-              <Shield size={15} />
+              <Shield size={20} />
             </button>
 
             {/* Power Off / Back button */}
             <button
               onClick={handleBack}
-              className="w-9 h-9 rounded-full bg-white/[0.06] flex items-center justify-center text-white/20 hover:bg-red-500/20 hover:text-red-400 transition-all"
+              className="w-12 h-12 rounded-full bg-white/[0.06] flex items-center justify-center text-white/20 hover:bg-red-500/20 hover:text-red-400 transition-all"
               title="Fermer (effet TV)"
             >
-              <Power size={15} />
+              <Power size={20} />
             </button>
 
             {/* Word Effects Button */}
             <button
               onClick={() => setShowWordEffectSettings(true)}
-              className="w-9 h-9 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400/60 hover:bg-purple-500/20 hover:text-purple-400 transition-all"
+              className="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400/60 hover:bg-purple-500/20 hover:text-purple-400 transition-all"
               title="Effets sur les mots"
             >
-              <Wand2 size={15} />
+              <Wand2 size={20} />
             </button>
 
             {/* Emoji Button */}
             <button
               onClick={() => setShowEmojis(!showEmojis)}
-              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+              className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
                 showEmojis
                   ? 'bg-purple-500/20 text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.2)]'
                   : 'bg-white/[0.06] text-white/40 hover:bg-white/10'
               }`}
             >
-              <Smile size={16} />
+              <Smile size={22} />
             </button>
 
             {/* Notification Bell */}
             <button
               onClick={() => setNotifEnabled(!notifEnabled)}
-              className={`relative w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+              className={`relative w-12 h-12 rounded-full flex items-center justify-center transition-all ${
                 notifEnabled
                   ? 'bg-amber-400/15 text-amber-400'
                   : 'bg-white/[0.06] text-white/20'
               }`}
             >
-              <Bell size={16} style={notifEnabled ? { animation: 'bellSwing 2s ease-in-out infinite' } : undefined} />
+              <Bell size={22} style={notifEnabled ? { animation: 'bellSwing 2s ease-in-out infinite' } : undefined} />
               {notifEnabled && (
-                <div className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.6)]" />
+                <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.6)]" />
               )}
             </button>
 
             {/* AI Toggle */}
             <button
               onClick={() => setShowAI(!showAI)}
-              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+              className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
                 showAI
                   ? 'bg-cyan-500 text-black shadow-[0_0_20px_rgba(34,211,238,0.3)]'
                   : 'bg-white/[0.06] text-white/40 hover:bg-white/10'
               }`}
             >
-              <Bot size={18} />
+              <Bot size={22} />
             </button>
           </div>
         </div>
@@ -301,13 +301,12 @@ export function AIAgendaApp() {
           )}
         </div>
 
-        {/* FAB */}
+        {/* FAB — big + button */}
         <button
           onClick={handleOpenAddModal}
-          className="fixed bottom-6 w-14 h-14 rounded-full bg-cyan-500 hover:bg-cyan-400 text-black flex items-center justify-center shadow-[0_4px_20px_rgba(34,211,238,0.4)] hover:shadow-[0_4px_30px_rgba(34,211,238,0.5)] transition-all hover:scale-105 active:scale-95 z-20"
-          style={{ right: '16px' }}
+          className="fixed bottom-8 right-5 w-20 h-20 rounded-full bg-cyan-500 hover:bg-cyan-400 text-black flex items-center justify-center shadow-[0_6px_30px_rgba(34,211,238,0.5)] hover:shadow-[0_6px_40px_rgba(34,211,238,0.6)] transition-all hover:scale-110 active:scale-95 z-20"
         >
-          <Plus size={24} strokeWidth={2.5} />
+          <Plus size={36} strokeWidth={3} />
         </button>
       </div>
 
