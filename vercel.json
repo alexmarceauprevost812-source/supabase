@@ -1,6 +1,5 @@
 {
-  "buildCommand": "cd apps/ti-lex-agenda && pnpm build",
-  "outputDirectory": "apps/ti-lex-agenda/.next",
-  "framework": "nextjs",
-  "installCommand": "pnpm install"
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" }
+  ]
 }

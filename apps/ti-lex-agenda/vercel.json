@@ -1,5 +1,4 @@
 {
   "framework": "nextjs",
-  "installCommand": "pnpm install",
-  "buildCommand": "pnpm build"
+  "installCommand": "cd ../.. && pnpm install --filter ti-lex-agenda..."
 }
