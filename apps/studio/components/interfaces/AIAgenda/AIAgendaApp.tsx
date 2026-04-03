@@ -1,9 +1,11 @@
-import { Plus, Bot, Bell, ChevronLeft } from 'lucide-react'
+import { Plus, Bot, Bell, ChevronLeft, Smile } from 'lucide-react'
 import { useState, useCallback } from 'react'
 import { AddEventModal } from './AddEventModal'
 import { AIChat } from './AIChat'
 import { CalendarSidebar } from './CalendarSidebar'
 import { DayTimeline } from './DayTimeline'
+import { EmojiAnimations } from './emojis/EmojiAnimations'
+import { EmojiPanel } from './emojis/EmojiPanel'
 import { EventNotification } from './EventNotification'
 import { LockScreen } from './LockScreen'
 import { useAgendaStore } from './useAgendaStore'
@@ -24,6 +26,7 @@ export function AIAgendaApp() {
   const [isLocked, setIsLocked] = useState(true)
   const [showAddModal, setShowAddModal] = useState(false)
   const [showAI, setShowAI] = useState(false)
+  const [showEmojis, setShowEmojis] = useState(false)
   const [view, setView] = useState<AppView>('month')
   const [isZooming, setIsZooming] = useState(false)
   const [prefillTime, setPrefillTime] = useState<string | undefined>()
@@ -59,12 +62,21 @@ export function AIAgendaApp() {
     setShowAddModal(true)
   }, [])
 
+  const handleSelectEmoji = useCallback((emojiId: string, packStyle: string) => {
+    // Could integrate emoji into event creation or chat
+    sendMessage(`[émoji: ${emojiId} (${packStyle})]`)
+    setShowEmojis(false)
+  }, [sendMessage])
+
   if (isLocked) {
     return <LockScreen onUnlock={() => setIsLocked(false)} />
   }
 
   return (
     <div className="flex h-full bg-[#0a0a0f] text-white">
+      {/* Global emoji animations */}
+      <EmojiAnimations />
+
       {/* Main Panel */}
       <div className="flex-1 flex flex-col min-w-0 relative overflow-hidden">
         {/* Top Bar */}
@@ -91,6 +103,18 @@ export function AIAgendaApp() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Emoji Button */}
+            <button
+              onClick={() => setShowEmojis(!showEmojis)}
+              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+                showEmojis
+                  ? 'bg-purple-500/20 text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.2)]'
+                  : 'bg-white/[0.06] text-white/40 hover:bg-white/10'
+              }`}
+            >
+              <Smile size={16} />
+            </button>
+
             {/* Notification Bell */}
             <button
               onClick={() => setNotifEnabled(!notifEnabled)}
@@ -122,7 +146,7 @@ export function AIAgendaApp() {
 
         {/* Content with zoom transition */}
         <div
-          className={`flex-1 flex flex-col min-h-0 transition-all duration-400 ${
+          className={`flex-1 flex flex-col min-h-0 transition-all ${
             isZooming
               ? view === 'month'
                 ? 'scale-110 opacity-0'
@@ -141,8 +165,9 @@ export function AIAgendaApp() {
                 events={events}
               />
 
-              {/* Quick event count below calendar */}
-              <div className="px-5 py-4 flex-1">
+              {/* Quick stats + emoji packs showcase */}
+              <div className="px-5 py-4 flex-1 space-y-3 overflow-auto">
+                {/* Stats */}
                 <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4">
                   <p className="text-xs text-white/30 mb-3 uppercase tracking-wider font-semibold">
                     Cliquez sur un jour pour voir le planning
@@ -150,7 +175,7 @@ export function AIAgendaApp() {
                   <div className="flex gap-3">
                     <div className="flex-1 bg-white/[0.04] rounded-xl p-3 text-center">
                       <span className="text-2xl font-black text-cyan-400">{events.length}</span>
-                      <p className="text-[10px] text-white/30 mt-1">Total événements</p>
+                      <p className="text-[10px] text-white/30 mt-1">Total</p>
                     </div>
                     <div className="flex-1 bg-white/[0.04] rounded-xl p-3 text-center">
                       <span className="text-2xl font-black text-amber-400">
@@ -162,10 +187,33 @@ export function AIAgendaApp() {
                       <span className="text-2xl font-black text-purple-400">
                         {events.filter((e) => e.priority === 'high').length}
                       </span>
-                      <p className="text-[10px] text-white/30 mt-1">Priorité haute</p>
+                      <p className="text-[10px] text-white/30 mt-1">Urgents</p>
                     </div>
                   </div>
                 </div>
+
+                {/* Emoji Packs Teaser */}
+                <button
+                  onClick={() => setShowEmojis(true)}
+                  className="w-full bg-gradient-to-r from-purple-500/10 via-cyan-500/10 to-amber-500/10 border border-white/[0.06] rounded-2xl p-4 text-left hover:border-white/[0.12] transition-all group"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-bold text-white flex items-center gap-2">
+                        <Smile size={14} className="text-purple-400" />
+                        Émojis Animés ti-lex
+                      </p>
+                      <p className="text-[10px] text-white/30 mt-1">
+                        3 packs : Windows 98 · Windows 8 · Futuriste 2026
+                      </p>
+                    </div>
+                    <div className="flex gap-1">
+                      <div className="w-7 h-7 rounded-lg bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-[7px] font-black text-[#000080]" style={{ fontFamily: 'monospace' }}>98</div>
+                      <div className="w-7 h-7 rounded-lg bg-[#2d89ef] flex items-center justify-center text-[7px] font-black text-white">W8</div>
+                      <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-500 flex items-center justify-center text-[8px] text-white">✦</div>
+                    </div>
+                  </div>
+                </button>
               </div>
             </>
           ) : (
@@ -199,6 +247,14 @@ export function AIAgendaApp() {
           onAdd={addEvent}
           onClose={() => setShowAddModal(false)}
           prefillTime={prefillTime}
+        />
+      )}
+
+      {/* Emoji Panel */}
+      {showEmojis && (
+        <EmojiPanel
+          onClose={() => setShowEmojis(false)}
+          onSelectEmoji={handleSelectEmoji}
         />
       )}
 
